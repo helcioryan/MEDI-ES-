@@ -1,0 +1,89 @@
+int pino_sensor = 36;
+int menor_valor;
+int valor_lido;
+int menor_valor_acumulado = 0;
+int ZERO_SENSOR;
+float corrente_pico;
+float corrente_eficaz;
+double maior_valor = 0;
+double corrente_valor = 0;
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(pino_sensor,INPUT);
+  delay(3000);  
+
+  //Serial.println("fazendo o auto zero do sensor");
+
+
+/*
+Calibrar ZERO do sensor 
+ZERO_SENSOR = analogRead(pino_sensor)
+for (int i = 0; i<10000, i++){
+valor_lido = analogRead(pino_sensor);
+ZERO_SENSOR = (ZERO_SENSOR + valor_lido)/2;
+delayMicroseconds(1)
+}
+
+Serial.print("Zero do Sensor");
+Serial.println(Zero do Sensor);
+delay(500);
+*/
+
+menor_valor = 4095;
+for (int i = 0; i<10000; i++){
+  valor_lido = analogRead(pino_sensor);
+  if(valor_lido<menor_valor){
+  menor_valor = valor_lido  ;
+}
+delayMicroseconds(1);  
+}
+
+ZERO_SENSOR = menor_valor;
+
+//Serial.print("Zero do Sensor");
+//Serial.println(ZERO_SENSOR);
+delay(3000);
+}
+void loop() {
+  menor_valor = 4095;
+  for (int i = 0; i<1600; i++){
+  valor_lido = analogRead(pino_sensor);
+  if(valor_lido < menor_valor){
+  menor_valor = valor_lido ; 
+  }
+delayMicroseconds(10);  
+}
+
+
+//Serial.print("Menor Valor");
+//Serial.println(menor_valor);
+
+corrente_pico = ZERO_SENSOR - menor_valor;
+corrente_pico = corrente_pico*0.805;
+corrente_pico = corrente_pico/100;
+
+//Serial.println("Corrente de Pico");
+//Serial.print(corrente_pico);
+//Serial.print("A");
+//Serial.print("--------");
+//Serial.print(corrente_pico*1000);
+//Serial.println("mA");
+
+corrente_eficaz = corrente_pico/1.4;
+Serial.println("Corrente Eficaz");
+//Serial.print(corrente_eficaz);
+//Serial.print("A");
+//Serial.print("--------");
+Serial.print(corrente_eficaz*1000);
+Serial.println("mA");
+delay(1000);
+}
+
+
+
+
+
+
+
+
